@@ -1,0 +1,62 @@
+services:
+
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+    stop_grace_period: 30s
+
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - TZ=America/Denver
+      - FIREWALL_OUTBOUND_SUBNETS=10.0.0.0/24,100.64.0.0/10
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
+      - WIREGUARD_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${WIREGUARD_ENDPOINT_PORT}
+#      - WIREGUARD_MTU=1320
+#      - DNS=8.8.8.8
+#      - DOT=off
+    ports:
+      - 8000:8000
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    volumes:
+      - /home/william/docker/gluetun:/gluetun
+    networks:
+      - default
+      - media-stack_default
+    restart: unless-stopped
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy
+
+    stop_grace_period: 120s
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - WEBUI_PORT=8080
+    volumes:
+      - /home/william/docker/qbittorrent:/config
+      - /mnt/dell/Plex Media/Downloads:/downloads
+    restart: unless-stopped
+
+
+networks:
+  media-stack_default:
+    external: true

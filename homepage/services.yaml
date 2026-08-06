@@ -1,0 +1,62 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+
+
+- Media:
+    - Radarr:
+        href: http://pi4:7878
+        description: Movies and FUN GALORE
+
+    - Sonarr:
+        href: http://pi4:8989
+        description: TV and TV and TV
+
+    - Bazarr:
+        href: http://pi4:6767
+        description: Subtitles sub-terior titties
+
+    - Jellyseerr:
+        href: http://pi4:5055
+        description: Requests for Jelly
+
+- Services:
+    - Prowlarr:
+        href: http://pi4:9696
+        description: Index this, biznatch
+
+    - Profilarr:
+        href: http://pi4:6868
+        description: white male, lonely
+
+    - qBittorrent:
+        href: http://pi4:8080
+        description: How many bits in a byte?
+
+- Servers:
+    - Plex:
+        href: http://dell:32400
+        description: You know what this is
+
+    - Omni-tools:
+        href: http://dell:8081
+        description: Your mom is an omni-tool
+
+    - ARM:
+        href: http://dell:8082
+        description: Rippy-rip rip
+
+#- My First Group:
+#    - My First Service:
+#        href: http://localhost/
+#        description: Homepage is awesome
+#
+#- My Second Group:
+#    - My Second Service:
+#        href: http://localhost/
+#        description: Homepage is the best
+#
+#- My Third Group:
+#    - My Third Service:
+#        href: http://localhost/
+#        description: Homepage is 😎
