@@ -1,0 +1,114 @@
+services:
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+    volumes:
+      - ./radarr:/config
+      - "/mnt/dell/Plex Media/Downloads:/downloads"
+      - "/mnt/dell/Plex Media:/media"
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+    volumes:
+      - ./sonarr:/config
+      - "/mnt/dell/Plex Media/Downloads:/downloads"
+      - "/mnt/dell/Plex Media:/media"
+    ports:
+      - "8989:8989"
+    restart: unless-stopped
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=America/Denver
+    volumes:
+      - ./jellyseerr:/app/config
+    ports:
+      - "5055:5055"
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+    volumes:
+      - ./prowlarr:/config
+    ports:
+      - "9696:9696"
+    restart: unless-stopped
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+    volumes:
+      - ./bazarr:/config
+#      - "/mnt/dell/Plex Media/Downloads:/downloads"
+      - "/mnt/dell/Plex Media:/media"
+    ports:
+      - "6767:6767"
+    restart: unless-stopped
+
+  profilarr:
+    # See "Release channels" below for available tags.
+    image: ghcr.io/dictionarry-hub/profilarr:latest
+    container_name: profilarr
+    ports:
+      - '6868:6868'
+    volumes:
+      - ./config:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      # Uncomment ORIGIN if you use a reverse proxy to access your containers.
+      #- ORIGIN=https://profilarr.yourdomain.com
+#      - PARSER_HOST=parser
+#      - PARSER_PORT=5000
+#    depends_on:
+#      parser:
+#        condition: service_healthy
+    restart: unless-stopped
+
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=America/Denver
+    ports:
+      - "8191:8191"
+    restart: unless-stopped
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8191/"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+
+networks:
+  default:
+    name: media-stack_default
